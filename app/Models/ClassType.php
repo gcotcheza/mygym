@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ScheduledClass;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ClassType extends Model
 {
@@ -12,6 +13,6 @@ class ClassType extends Model
 
     public function scheduledClasses(): HasMany
     {
-        return $this->hasMany(ScheduleClass::class);
+        return $this->hasMany(ScheduledClass::class);
     }
 }
