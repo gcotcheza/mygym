@@ -14,9 +14,11 @@ class ScheduledClassesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        ScheduledClass::factory(10)->create()->each(function ($class, $index) {
-            $class->date_time = Carbon::now()->addHours(24 + $index)->minute(0)->second(0);
-            $class->save();
-        });
+        ScheduledClass::factory(10)->state(function ($attributes, $index) {
+            return [
+                'date_time' => Carbon::now()->addHours(24 + $index)->minute(0)->second(0),
+            ];
+        })->create();
+
     }
 }

@@ -11,8 +11,6 @@ class AuthServiceProvider extends ServiceProvider
 {
     /**
      * The model to policy mappings for the application.
-     *
-     * @var array<class-string, class-string>
      */
     protected $policies = [
         //
@@ -25,6 +23,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         Gate::define('schedule-class', function(User $user) {
             return $user->role === 'instructor';
+        });
+        Gate::define('book-class', function (User $user) {
+            return $user->role === 'member';
         });
     }
 }

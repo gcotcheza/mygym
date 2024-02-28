@@ -41,14 +41,14 @@ Route::middleware(['auth', 'role:instructor'])->group(function() {
 });
 
 // Member
-Route::middleware(['auth', 'role:member'])->group(function() {
+Route::middleware(['auth', 'role:member'])->group(function () {
     Route::get('/member/dashboard', function () {
-            return view('member.dashboard');
-        })->name('member.dashboard');
-    Route::get('/member/bookings', [BookingController::class, 'index'])->name('booking.index');
-    Route::get('/member/bookings', [BookingController::class, 'create'])->name('booking.create');
+        return view('member.dashboard');
+    })->name('member.dashboard');
+    Route::get('/member/book', [BookingController::class, 'create'])->name('booking.create');
     Route::post('/member/bookings', [BookingController::class, 'store'])->name('booking.store');
-    Route::delete('/member/bookings', [BookingController::class, 'destroy'])->name('booking.destroy');
+    Route::get('/member/bookings', [BookingController::class, 'index'])->name('booking.index');
+    Route::delete('/member/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 });
 
 Route::get('/member/book', [BookingController::class, 'create'])->middleware(['auth', 'role:member'])->name('booking.create');
