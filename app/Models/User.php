@@ -8,6 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -48,5 +49,13 @@ class User extends Authenticatable
     public function scheduledClasses(): HasMany
     {
         return $this->hasMany(ScheduledClass::class, 'instructor_id');
+    }
+
+    /**
+     * This user belongs to many scheduled classes or bookings.
+     */
+    public function bookings(): BelongsToMany
+    {
+        return $this->belongsToMany(ScheduledClass::class, 'bookings');
     }
 }
