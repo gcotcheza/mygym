@@ -4,43 +4,50 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ScheduledClass;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class BookingController extends Controller
 {
     /** 
      * Show all the bookings of the authenticated user. 
      */
-    public function index()
+    public function index(): View
     {
-        $bookings = auth()->user()->bookings()->where('date_time', '>', now())->get();
+        $bookings = auth()->user()->bookings()->upcoming()->get();
 
         return view('members.upcoming')->with('bookings', $bookings);
     }
 
     /** 
-     * S
+     * Show the form for creating a new booking.
      */
-    public function create()
+    public function create(): View
     {
-        $scheduledClasses = ScheduledClass::where('date_time', '>', now())
+        $scheduledClasses = ScheduledClass::upcoming()
             ->with(['classType', 'instructor'])
+            ->notBooked()
             ->oldest()->get();
 
         return view('members.book')
             ->with('scheduledClasses', $scheduledClasses);
-    }    
+    }
 
     /** 
      * Store a newly booked class in the datanbase.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        auth()->user()->bookings()->attach($request->scheduled_class_id);
+        // check if it's already attached before attaching it. 
+        auth()->user()->bookings()->syncWithoutDetaching([$request->scheduled_class_id]);
 
         return redirect()->route('booking.index');
     }
 
-    public function destroy(int $id)
+    /** 
+     * Destroy a booking resource.
+     */
+    public function destroy(int $id): RedirectResponse
     {
         auth()->user()->bookings()->detach($id);
 

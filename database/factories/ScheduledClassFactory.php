@@ -19,7 +19,7 @@ class ScheduledClassFactory extends Factory
     {
         return [
             'instructor_id' => rand(15, 24),
-            'class_type_id' => rand(1, 5),
+            'class_type_id' => rand(1, 6),
         ];
     }
 }

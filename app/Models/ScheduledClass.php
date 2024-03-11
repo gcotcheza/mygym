@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ScheduledClass extends Model
@@ -38,6 +39,18 @@ class ScheduledClass extends Model
      */
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'bookings');
+    }
+
+    public function scopeUpcoming(Builder $query)
+    {
+        return $query->where('date_time', '>', now());
+    }
+
+    public function scopeNotBooked(Builder $query) 
+    {
+        return $query->whereDoesntHave('members', function ($query) {
+                $query->where('user_id', auth()->user()->id);
+            });
     }
 }

@@ -15,7 +15,7 @@ class ScheduledClassController extends Controller
     public function index()
     {
         $scheduledClasses = auth()->user()->scheduledClasses()
-            ->where('date_time', '>', now())
+            ->upcoming()
             ->oldest('date_time')
             ->get();
 
@@ -50,16 +50,16 @@ class ScheduledClassController extends Controller
         ]);
 
         ScheduledClass::create($validated);
-        
+
         return redirect()->route('schedule.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ScheduledClass $schedule )
+    public function destroy(ScheduledClass $schedule)
     {
-        if(auth()->user()->cannot('delete', $schedule)) {
+        if (auth()->user()->cannot('delete', $schedule)) {
             abort(403);
         }
 
